@@ -6,8 +6,10 @@ import com.kata.tictactoe.model.Square
 
 class TicTacToeManager(
     private val ticTacToeManagerCallback: TicTacToeManagerCallback?,
-    var board: Board? = Board(Constants.BOARD_SIZE)
+    var board: Board? = Board(Constants.BOARD_SIZE),
+    var isGameOver: Boolean = false
 ) {
+
 
     interface TicTacToeManagerCallback {
         fun onPlayerTurnChange(playerTurn: PlayerTurn)
@@ -74,7 +76,7 @@ class TicTacToeManager(
         return true
     }
 
-    fun checkForGameWin() : Boolean {
+    fun checkForGameWin(): Boolean {
         return false
     }
 
