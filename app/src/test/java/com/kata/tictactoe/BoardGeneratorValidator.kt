@@ -38,8 +38,18 @@ class BoardGeneratorValidator {
     }
 
     @Test
+    fun checkPlayerTurn(){
+        // default player turn must be X
+        Assert.assertEquals(TicTacToeManager.PlayerTurn.X, manager.playerTurn)
+    }
+
+    @Test
     fun checkBoardReset(){
-        //TODO after adding square status change feature
+        // reset the board and rerun tests
+        manager.reset()
+        checkBoardSize()
+        checkSquaresStatus()
+        checkPlayerTurn()
     }
 
 }
