@@ -16,9 +16,11 @@ class TicTacToeGameValidator {
 
         // check adding a first pawn to a blank square
         val success = manager.addPawn(0, 0)
-        Assert.assertEquals(manager.board!!.grid[0][0], Square.STATE.X)
         // function return success
         Assert.assertTrue(success)
+        // first turn so the square must countain an X
+        Assert.assertEquals(manager.board!!.grid[0][0].state, Square.STATE.X)
+
     }
 
     @Test
@@ -26,11 +28,7 @@ class TicTacToeGameValidator {
         val manager = TicTacToeManager()
 
         // fill the first line with alternate X and Y
-        for (turn in 0..Constants.BOARD_SIZE) {
-
-            val success = manager.addPawn(0, turn)
-            // check that the pawn was correctly added
-            Assert.assertTrue(success)
+        for (turn in 0 until Constants.BOARD_SIZE) {
 
             // check that the turn is X for evens turns, Y for odds
             val expectedPlayerTurn =
@@ -40,18 +38,24 @@ class TicTacToeGameValidator {
                 expectedPlayerTurn
             )
 
+            // add a pawn to go to alternate player
+            val success = manager.addPawn(0, turn)
+            // check that the pawn was correctly added
+            Assert.assertTrue(success)
+
         }
 
     }
 
     @Test
-    fun checkPlayerTurnChangeFailure(){
+    fun checkPlayerTurnChangeFailure() {
         val manager = TicTacToeManager()
-        // check that the turn doesn't change if adding a pawn was a failure
+
+        // check that the turn doesn't change if adding a pawn results in a failure
 
         // if the status of the square is not BLANK
-        Assert.assertTrue(manager.addPawn(0,0)) // player turn should now be Y
-        Assert.assertNotEquals(manager.board!!.grid[0][0], Square.STATE.BLANK)
+        Assert.assertTrue(manager.addPawn(0, 0)) // player turn should now be Y
+        Assert.assertNotEquals(manager.board!!.grid[0][0].state, Square.STATE.BLANK)
 
         // try to add a pawn in the same position
         Assert.assertFalse(manager.addPawn(0, 0))
