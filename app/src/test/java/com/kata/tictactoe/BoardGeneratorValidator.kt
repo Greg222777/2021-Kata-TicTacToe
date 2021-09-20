@@ -7,7 +7,7 @@ import org.junit.Test
 
 class BoardGeneratorValidator {
 
-    private val manager = TicTacToeManager()
+    private val manager = TicTacToeManager(null)
 
     @Test
     fun checkBoardSize() {

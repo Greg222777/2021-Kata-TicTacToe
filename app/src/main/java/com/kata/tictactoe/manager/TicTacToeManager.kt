@@ -5,7 +5,7 @@ import com.kata.tictactoe.model.Board
 import com.kata.tictactoe.model.Square
 
 class TicTacToeManager(
-    private val ticTacToeManagerCallback: TicTacToeManagerCallback,
+    private val ticTacToeManagerCallback: TicTacToeManagerCallback?,
     var board: Board? = Board(Constants.BOARD_SIZE)
 ) {
 
@@ -16,7 +16,7 @@ class TicTacToeManager(
 
     enum class PlayerTurn {
         X,
-        Y
+        O
     }
 
     // turns start with X by default
@@ -58,15 +58,17 @@ class TicTacToeManager(
                 // change the status of the square to the current player
                 board!!.grid[x][y].state = Square.STATE.X
                 // alternate turn
-                playerTurn = PlayerTurn.Y
-                ticTacToeManagerCallback.onPlayerTurnChange(PlayerTurn.Y)
+                playerTurn = PlayerTurn.O
+                // notify callback player changed
+                ticTacToeManagerCallback?.onPlayerTurnChange(PlayerTurn.O)
             }
-            PlayerTurn.Y -> {
+            PlayerTurn.O -> {
                 // change the status of the square to the current player
-                board!!.grid[x][y].state = Square.STATE.Y
+                board!!.grid[x][y].state = Square.STATE.O
                 // alternate turn
                 playerTurn = PlayerTurn.X
-                ticTacToeManagerCallback.onPlayerTurnChange(PlayerTurn.X)
+                // notify callback player changed
+                ticTacToeManagerCallback?.onPlayerTurnChange(PlayerTurn.X)
             }
         }
         return true
