@@ -4,7 +4,15 @@ import com.kata.tictactoe.Constants
 import com.kata.tictactoe.model.Board
 import com.kata.tictactoe.model.Square
 
-class TicTacToeManager(var board: Board? = Board(Constants.BOARD_SIZE)) {
+class TicTacToeManager(
+    private val ticTacToeManagerCallback: TicTacToeManagerCallback,
+    var board: Board? = Board(Constants.BOARD_SIZE)
+) {
+
+    interface TicTacToeManagerCallback {
+        fun onPlayerTurnChange(playerTurn: PlayerTurn)
+        fun onGameWin(playerTurn: PlayerTurn)
+    }
 
     enum class PlayerTurn {
         X,
@@ -51,17 +59,21 @@ class TicTacToeManager(var board: Board? = Board(Constants.BOARD_SIZE)) {
                 board!!.grid[x][y].state = Square.STATE.X
                 // alternate turn
                 playerTurn = PlayerTurn.Y
+                ticTacToeManagerCallback.onPlayerTurnChange(PlayerTurn.Y)
             }
             PlayerTurn.Y -> {
                 // change the status of the square to the current player
                 board!!.grid[x][y].state = Square.STATE.Y
                 // alternate turn
                 playerTurn = PlayerTurn.X
+                ticTacToeManagerCallback.onPlayerTurnChange(PlayerTurn.X)
             }
         }
         return true
+    }
 
-
+    fun checkForGameWin() : Boolean {
+        return false
     }
 
 
