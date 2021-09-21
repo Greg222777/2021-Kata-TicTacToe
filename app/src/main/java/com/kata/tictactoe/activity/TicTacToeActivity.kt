@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.kata.tictactoe.R
@@ -13,19 +14,26 @@ import com.kata.tictactoe.manager.TicTacToeManager
 
 class TicTacToeActivity : AppCompatActivity() {
     private var binding: TicTacToeActivityBinding? = null
-    lateinit var viewModel: TicTacToeViewModel
+    private lateinit var viewModel: TicTacToeViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = TicTacToeActivityBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(TicTacToeViewModel::class.java)
+        observeViewModel()
         setContentView(binding!!.root)
     }
 
     override fun onStart() {
         super.onStart()
         listenForClicks()
+    }
+
+    private fun observeViewModel() {
+        viewModel.infoTextLiveData.observe(this, { textResId ->
+            binding?.gameInfoTextView?.text = getString(textResId)
+        })
     }
 
     private fun listenForClicks() {
