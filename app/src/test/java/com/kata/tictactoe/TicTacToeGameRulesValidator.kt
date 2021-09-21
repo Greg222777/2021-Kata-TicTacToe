@@ -3,7 +3,6 @@ package com.kata.tictactoe
 import com.kata.tictactoe.manager.TicTacToeManager
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -29,23 +28,23 @@ class TicTacToeGameRulesValidator {
     private val testCaseLinearHorizontal =
         listOf(Pair(0, 0), Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(2, 0))
 
-    // center, left, then right
+    // left, right then center
     private val testCaseCenterHorizontal =
-        listOf(Pair(1, 0), Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(2, 0))
+        listOf(Pair(0, 0), Pair(0, 1), Pair(2, 0), Pair(1, 1), Pair(1, 0))
 
     /**
     YXY
     -X-
-    ---
+    -X-
      **/
 
     // up to down
     private val testCaseLinearVertical =
-        listOf(Pair(0, 0), Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(2, 0))
+        listOf(Pair(1, 0), Pair(0, 1), Pair(1, 1), Pair(2, 0), Pair(1, 2))
 
-    // center, up then down
+    // up, down then center
     private val testCaseCenterVertical =
-        listOf(Pair(1, 0), Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(2, 0))
+        listOf(Pair(1, 0), Pair(0, 0), Pair(1, 2), Pair(2, 0), Pair(1, 1))
 
     /**
     XYY
@@ -53,13 +52,13 @@ class TicTacToeGameRulesValidator {
     --X
      **/
 
-    // up to down
+    // top left to bottom right
     private val testCaseLinearDiagonal =
-        listOf(Pair(0, 0), Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(2, 0))
+        listOf(Pair(0, 0), Pair(1, 0), Pair(1, 1), Pair(2, 0), Pair(2, 2))
 
-    // center, up then down
+    // top left, bottom right then center
     private val testCaseCenterDiagonal =
-        listOf(Pair(1, 0), Pair(0, 1), Pair(1, 0), Pair(1, 1), Pair(2, 0))
+        listOf(Pair(0, 0), Pair(1, 0), Pair(2, 2), Pair(2, 0), Pair(1, 1))
 
     /**
      * PLAYER O WIN
@@ -76,17 +75,24 @@ class TicTacToeGameRulesValidator {
 
     //from left to right
     private val testCasePlayerOWins =
-        listOf(Pair(1, 1), Pair(0, 0), Pair(0, 2), Pair(1, 0), Pair(2, 0), Pair(0, 2))
+        listOf(Pair(1, 1), Pair(0, 0), Pair(0, 2), Pair(1, 0), Pair(2, 2), Pair(2, 0))
 
     @Test
     fun checkAllWinCases() {
         simulateWinCase(testCaseLinearHorizontal, TicTacToeManager.PlayerTurn.X)
+
         simulateWinCase(testCaseCenterHorizontal, TicTacToeManager.PlayerTurn.X)
+
         simulateWinCase(testCaseLinearVertical, TicTacToeManager.PlayerTurn.X)
+
         simulateWinCase(testCaseCenterVertical, TicTacToeManager.PlayerTurn.X)
+
         simulateWinCase(testCaseLinearDiagonal, TicTacToeManager.PlayerTurn.X)
+
         simulateWinCase(testCaseCenterDiagonal, TicTacToeManager.PlayerTurn.X)
+
         simulateWinCase(testCasePlayerOWins, TicTacToeManager.PlayerTurn.O)
+
     }
 
 
@@ -95,28 +101,29 @@ class TicTacToeGameRulesValidator {
         winingPlayer: TicTacToeManager.PlayerTurn
     ) {
 
-        val mockitest: TicTacToeManager.TicTacToeManagerCallback =
+        val mockCallback: TicTacToeManager.TicTacToeManagerCallback =
             mock(TicTacToeManager.TicTacToeManagerCallback::class.java)
 
-        val callBack = mockCallback()
 
-        val manager = TicTacToeManager(callBack)
+        val manager = TicTacToeManager(mockCallback)
 
-        for (i in testCase.indices - 1) {
+        for (i in 0..testCase.size - 2) {
             Assert.assertTrue(manager.addPawn(testCase[i].first, testCase[i].second))
         }
 
-        verify(mockitest, Mockito.never()).onGameWin(any())
+        // verify the game hasn't been won
+        verify(mockCallback, Mockito.never()).onGameWin(TicTacToeManager.PlayerTurn.X)
 
-        Assert.assertTrue(manager.addPawn(testCase.last().first, testCase.last().second))
+        // winning pawn
+        Assert.assertTrue(
+            manager.addPawn(
+                testCase[testCase.size - 1].first,
+                testCase[testCase.size - 1].second
+            )
+        )
 
-        verify(callBack, Mockito.times(1)).onGameWin(winingPlayer)
+        // onGameWin() must have been called once after the wining pawn with the correct player
+        verify(mockCallback, Mockito.times(1)).onGameWin(winingPlayer)
     }
 
-    private fun mockCallback(): TicTacToeManager.TicTacToeManagerCallback {
-        return object : TicTacToeManager.TicTacToeManagerCallback {
-            override fun onPlayerTurnChange(playerTurn: TicTacToeManager.PlayerTurn) {}
-            override fun onGameWin(playerTurn: TicTacToeManager.PlayerTurn) {}
-        }
-    }
 }

@@ -59,6 +59,13 @@ class TicTacToeManager(
             PlayerTurn.X -> {
                 // change the status of the square to the current player
                 board!!.grid[x][y].state = Square.STATE.X
+
+                val win = checkForGameWin(x, y)
+
+                if (win) {
+                    finishGame()
+                    return true
+                }
                 // alternate turn
                 playerTurn = PlayerTurn.O
                 // notify callback player changed
@@ -67,6 +74,12 @@ class TicTacToeManager(
             PlayerTurn.O -> {
                 // change the status of the square to the current player
                 board!!.grid[x][y].state = Square.STATE.O
+
+
+                if (checkForGameWin(x, y)) {
+                    finishGame()
+                    return true
+                }
                 // alternate turn
                 playerTurn = PlayerTurn.X
                 // notify callback player changed
@@ -76,8 +89,84 @@ class TicTacToeManager(
         return true
     }
 
-    fun checkForGameWin(): Boolean {
+    private fun checkForGameWin(x: Int, y: Int): Boolean {
+
+        // same as the current player turn
+        val statusToCheckFor = if (playerTurn == PlayerTurn.X) Square.STATE.X else Square.STATE.O
+
+        var count = 1
+        //horizontal left
+        count = checkNeighborPawns(count, x, y, -1, 0, statusToCheckFor)
+        //horizontal right
+        count = checkNeighborPawns(count, x, y, 1, 0, statusToCheckFor)
+
+        if (count >= board!!.size) return true
+
+        count = 1
+
+        //vertical down
+        count = checkNeighborPawns(count, x, y, 0, 1, statusToCheckFor)
+        //vertical up
+        count = checkNeighborPawns(count, x, y, 0, -1, statusToCheckFor)
+
+        if (count >= board!!.size) return true
+
+        count = 1
+
+        //diagonal top left
+        count = checkNeighborPawns(count, x, y, -1, -1, statusToCheckFor)
+        //diagonal bottom right
+        count = checkNeighborPawns(count, x, y, 1, 1, statusToCheckFor)
+
+
+        if (count >= board!!.size) return true
+
+        count = 1
+
+        //diagonal bottom left
+        count = checkNeighborPawns(count, x, y, -1, 1, statusToCheckFor)
+
+        //diagonal top right
+        count = checkNeighborPawns(count, x, y, 1, -1, statusToCheckFor)
+
+        if (count >= board!!.size) return true
+
         return false
+    }
+
+    private fun checkNeighborPawns(
+        count: Int,
+        x: Int,
+        y: Int,
+        xOffset: Int,
+        yOffset: Int,
+        statusToCheckFor: Square.STATE
+    ): Int {
+        var updatedCount = count
+        var updatedXOffset = xOffset
+        var updatedYOffset = yOffset
+        while (checkStreak(statusToCheckFor, x + updatedXOffset, y + updatedYOffset)) {
+            updatedCount++
+            updatedXOffset += xOffset
+            updatedYOffset += yOffset
+        }
+        return updatedCount
+    }
+
+    private fun checkStreak(statusToCheckFor: Square.STATE, x: Int, y: Int): Boolean {
+        //check bounds
+        return x >= 0
+                && y >= 0
+                && x < board!!.size
+                && y < board!!.size
+                && board!!.grid[x][y].state == statusToCheckFor
+
+
+    }
+
+    private fun finishGame() {
+        isGameOver = true
+        ticTacToeManagerCallback?.onGameWin(playerTurn)
     }
 
 
