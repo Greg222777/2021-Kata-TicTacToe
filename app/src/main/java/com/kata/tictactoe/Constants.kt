@@ -1,5 +1,5 @@
 package com.kata.tictactoe
 
 object Constants {
-    val BOARD_SIZE = 3
+    const val BOARD_SIZE = 3
 }

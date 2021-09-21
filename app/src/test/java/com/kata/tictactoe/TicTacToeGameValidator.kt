@@ -38,7 +38,7 @@ class TicTacToeGameValidator {
                 expectedPlayerTurn
             )
 
-            // add a pawn to go to alternate player
+            // add a pawn to switch to alternate player
             val success = manager.addPawn(0, turn)
             // check that the pawn was correctly added
             Assert.assertTrue(success)
@@ -66,6 +66,10 @@ class TicTacToeGameValidator {
         Assert.assertFalse(manager.addPawn(Constants.BOARD_SIZE + 1, Constants.BOARD_SIZE + 1))
         // player turn should remain Y
         Assert.assertEquals(manager.playerTurn, TicTacToeManager.PlayerTurn.O)
+
+        // mock the game being finished, add a pawn to check if it is over
+        manager.isGameOver = true
+        Assert.assertFalse(manager.addPawn(1, 1))
     }
 
 }

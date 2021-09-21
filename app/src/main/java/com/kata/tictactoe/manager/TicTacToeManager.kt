@@ -7,7 +7,7 @@ import com.kata.tictactoe.model.Square
 class TicTacToeManager(
     private val ticTacToeManagerCallback: TicTacToeManagerCallback?,
     var board: Board? = Board(Constants.BOARD_SIZE),
-    var isGameOver: Boolean = false
+     var isGameOver: Boolean = false
 ) {
 
 
@@ -29,8 +29,7 @@ class TicTacToeManager(
         ticTacToeManagerCallback?.onPlayerTurnChange(PlayerTurn.X)
     }
 
-    /**k
-     *
+    /**
      * @param x : x axis on the boardk
      * @param y : y axis on the board
      * @return success : if TRUE, the pawn was added.  if FALSE, an error occured
@@ -87,6 +86,12 @@ class TicTacToeManager(
         return true
     }
 
+    /**
+     *
+     * @param x : x axis on the boardk
+     * @param y : y axis on the board
+     * @return win : if TRUE (3 neighbor pawns streak), the current player won and the game over
+     */
     private fun checkForGameWin(x: Int, y: Int): Boolean {
 
         // same as the current player turn

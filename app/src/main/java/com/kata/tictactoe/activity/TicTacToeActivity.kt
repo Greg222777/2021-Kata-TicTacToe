@@ -12,9 +12,9 @@ import com.kata.tictactoe.manager.TicTacToeManager
 
 
 class TicTacToeActivity : AppCompatActivity() {
+
     private var binding: TicTacToeActivityBinding? = null
     private lateinit var viewModel: TicTacToeViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +38,7 @@ class TicTacToeActivity : AppCompatActivity() {
     private fun listenForClicks() {
 
         binding?.let {
+            //x and y are the index of the imageview in a 3X3 grid
             it.topLeftImageView.apply {
                 setOnClickListener { addPawn(this, 0, 0) }
             }
@@ -94,10 +95,10 @@ class TicTacToeActivity : AppCompatActivity() {
     private fun addPawn(imageView: ImageView, x: Int, y: Int) {
         // retrieve player turn before it is changed
         val currentPlayerTurn = viewModel.currentPlayerTurn
-        val success = viewModel.addPoint(x, y)
 
+        val success = viewModel.addPoint(x, y)
         if (success) {
-            // pawn drawable
+            // get pawn drawable and load it in the imageview
             val res = when (currentPlayerTurn) {
                 TicTacToeManager.PlayerTurn.X -> ContextCompat.getDrawable(this, R.drawable.pawn_x)
                 TicTacToeManager.PlayerTurn.O -> ContextCompat.getDrawable(
