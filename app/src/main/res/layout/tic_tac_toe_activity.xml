@@ -175,7 +175,7 @@
                 app:layout_constraintRight_toRightOf="parent" />
 
             <ImageView
-                android:id="@+id/botttomLeftImageView"
+                android:id="@+id/bottomLeftImageView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"

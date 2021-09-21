@@ -1,17 +1,20 @@
 package com.kata.tictactoe.activity
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.kata.tictactoe.manager.TicTacToeManager
 
 class TicTacToeViewModel : ViewModel() {
 
-    private val ticTacToeManagerCallback = object : TicTacToeManager.TicTacToeManagerCallback{
+     var currentPlayerTurn = TicTacToeManager.PlayerTurn.X
+
+    private val ticTacToeManagerCallback = object : TicTacToeManager.TicTacToeManagerCallback {
         override fun onPlayerTurnChange(playerTurn: TicTacToeManager.PlayerTurn) {
-            TODO("Not yet implemented")
+            currentPlayerTurn = playerTurn
         }
 
         override fun onGameWin(playerTurn: TicTacToeManager.PlayerTurn) {
-            TODO("Not yet implemented")
+            Log.d("TTT", "on player win")
         }
 
     }
@@ -19,6 +22,8 @@ class TicTacToeViewModel : ViewModel() {
     private val manager = TicTacToeManager(ticTacToeManagerCallback)
 
     fun reset() = manager.reset()
+
+    fun addPoint(x: Int, y: Int) = manager.addPawn(x, y)
 
 
 }
