@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.kata.tictactoe.R
@@ -38,37 +37,58 @@ class TicTacToeActivity : AppCompatActivity() {
 
     private fun listenForClicks() {
 
-        binding?.apply {
-            topLeftImageView.apply {
+        binding?.let {
+            it.topLeftImageView.apply {
                 setOnClickListener { addPawn(this, 0, 0) }
             }
-            topCenterImageView.apply {
+            it.topCenterImageView.apply {
                 setOnClickListener { addPawn(this, 1, 0) }
             }
-            topRightImageView.apply {
+            it.topRightImageView.apply {
                 setOnClickListener { addPawn(this, 2, 0) }
             }
-            centerLeftImageView.apply {
+            it.centerLeftImageView.apply {
                 setOnClickListener { addPawn(this, 0, 1) }
             }
-            centerCenterImageView.apply {
+            it.centerCenterImageView.apply {
                 setOnClickListener { addPawn(this, 1, 1) }
             }
-            centerRightImageView.apply {
+            it.centerRightImageView.apply {
                 setOnClickListener { addPawn(this, 2, 1) }
             }
-            bottomLeftImageView.apply {
+            it.bottomLeftImageView.apply {
                 setOnClickListener { addPawn(this, 0, 2) }
             }
-            bottomCenterImageView.apply {
+            it.bottomCenterImageView.apply {
                 setOnClickListener { addPawn(this, 1, 2) }
             }
-            bottomRightImageView.apply {
+            it.bottomRightImageView.apply {
                 setOnClickListener { addPawn(this, 2, 2) }
             }
 
-            resetButton.setOnClickListener { viewModel.reset() }
+            it.resetButton.setOnClickListener { reset() }
         }
+    }
+
+    private fun reset() {
+
+        binding?.let {
+            // clear all imageviews
+            Glide.with(this).clear(it.topLeftImageView)
+            Glide.with(this).clear(it.topCenterImageView)
+            Glide.with(this).clear(it.topRightImageView)
+            Glide.with(this).clear(it.centerLeftImageView)
+            Glide.with(this).clear(it.centerCenterImageView)
+            Glide.with(this).clear(it.centerRightImageView)
+            Glide.with(this).clear(it.bottomLeftImageView)
+            Glide.with(this).clear(it.bottomCenterImageView)
+            Glide.with(this).clear(it.bottomRightImageView)
+            // clear game info text view
+            it.gameInfoTextView.text = ""
+        }
+        // reset game logic
+        viewModel.reset()
+
     }
 
     private fun addPawn(imageView: ImageView, x: Int, y: Int) {

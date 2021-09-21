@@ -37,6 +37,9 @@ class TicTacToeManager(
      */
     fun addPawn(x: Int, y: Int): Boolean {
 
+        // return false if the game is already finished
+        if (isGameOver) return false
+
         // return false if the board is null
         if (board == null) return false
 
@@ -166,6 +169,8 @@ class TicTacToeManager(
         playerTurn = PlayerTurn.X
         // regenerate board
         board = Board(Constants.BOARD_SIZE)
+        // reset game
+        isGameOver = false
         // notify callback the player is reset to X by default
         ticTacToeManagerCallback?.onPlayerTurnChange(PlayerTurn.X)
         return board!!
