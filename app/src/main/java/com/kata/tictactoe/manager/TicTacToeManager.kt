@@ -24,19 +24,14 @@ class TicTacToeManager(
     // turns start with X by default
     var playerTurn = PlayerTurn.X
 
-    fun reset(): Board {
-        // destroy board
-        board = null
-        // reset player turn to X
-        playerTurn = PlayerTurn.X
-        // regenerate board
-        board = Board(Constants.BOARD_SIZE)
-        return board!!
+    init {
+        // on init, notify callback the player is set to X by default
+        ticTacToeManagerCallback?.onPlayerTurnChange(PlayerTurn.X)
     }
 
     /**k
      *
-     * @param x : x axis on the board
+     * @param x : x axis on the boardk
      * @param y : y axis on the board
      * @return success : if TRUE, the pawn was added.  if FALSE, an error occured
      */
@@ -162,6 +157,18 @@ class TicTacToeManager(
                 && board!!.grid[x][y].state == statusToCheckFor
 
 
+    }
+
+    fun reset(): Board {
+        // destroy board
+        board = null
+        // reset player turn to X
+        playerTurn = PlayerTurn.X
+        // regenerate board
+        board = Board(Constants.BOARD_SIZE)
+        // notify callback the player is reset to X by default
+        ticTacToeManagerCallback?.onPlayerTurnChange(PlayerTurn.X)
+        return board!!
     }
 
     private fun finishGame() {
